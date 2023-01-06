@@ -1,0 +1,69 @@
+USE SinhVien
+GO
+
+-- ********* Tạo PROCEDURE Không có tham số **********
+CREATE PROCEDURE GR_SV
+AS
+BEGIN
+    SELECT S.IDLOP, SUM(S.TUOI) 
+        FROM SV AS S GROUP BY IDLOP
+    ORDER BY SUM(S.TUOI) DESC;
+END;
+GO
+
+-- ********* Sửa PROCEDURE **********
+ALTER PROCEDURE GR_SV
+AS
+BEGIN
+    SELECT S.IDLOP AS N'ID Lớp', SUM(S.TUOI) 
+        FROM SV AS S GROUP BY IDLOP
+    ORDER BY SUM(S.TUOI) DESC;
+END;
+GO
+
+-- ********* thực thi PROCEDURE **********
+EXEC GR_SV
+GO
+
+-- ********* Tạo có tham số **********
+CREATE PROCEDURE TimGtLonHonTb (
+    @trungbinh AS INT OUTPUT
+)
+AS
+BEGIN 
+    SELECT S.IDLOP AS N'ID Lớp', SUM(S.TUOI) 
+        FROM SV AS S GROUP BY IDLOP
+        HAVING SUM(S.TUOI) > 50 
+        ORDER BY SUM(S.TUOI) DESC;
+END;
+GO
+EXEC TimGtLonHonTb 50;
+GO
+
+CREATE PROCEDURE CHEN_DATA(
+    @id CHAR(10),
+    @ten NVARCHAR(255),
+    @idlop CHAR(10),
+    @tuoi INT
+)
+AS BEGIN
+    INSERT INTO SV
+    VALUES (@id,@ten,@idlop,@tuoi)
+END;
+GO
+
+EXEC CHEN_DATA 'SV008',N'Nguyễn Thanh Lâm','D01',30;
+GO
+SELECT * FROM SV
+GO
+
+CREATE PROCEDURE XOA_DATA (
+    @id CHAR(10)
+)AS BEGIN 
+    DELETE FROM SV WHERE IDSV = @id
+END;
+GO
+
+EXEC XOA_DATA 'SV008'
+SELECT * FROM SV
+GO

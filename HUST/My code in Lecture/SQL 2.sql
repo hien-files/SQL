@@ -1,0 +1,113 @@
+
+-- Primary Key và Foreign KeySELECT TOP?
+-- LIKE?
+-- BETWEEN?
+-- SUM ?
+-- INNER JOIN
+-- FULL OUTER JOIN
+-- LEFT - RIGHT JOIN
+
+
+CREATE DATABASE Quan_Ly_Ban_Hang
+GO
+
+USE Quan_Ly_Ban_Hang
+GO
+
+CREATE TABLE DanhMuc (
+    IDDM CHAR(5) CONSTRAINT id_dm UNIQUE,
+    Name NVARCHAR(255),
+)
+GO
+
+CREATE TABLE SP (
+    IDSP INT IDENTITY CONSTRAINT id_sp PRIMARY KEY,
+    Name NVARCHAR(255),
+    MADM CHAR(5) CONSTRAINT FK_sp_dm FOREIGN KEY REFERENCES DanhMuc(IDDM)
+)
+GO
+
+INSERT INTO DanhMuc
+    VALUES 
+    ('LT',N'LapTop'),
+    ('DT',N'Điện Thoại')
+GO
+
+INSERT INTO SP
+    VALUES 
+    ('Asus D415','LT'),
+    ('Vivo Y20','DT'),
+    ('DELL P90','LT'),
+    ('POCO X3','DT')
+GO
+
+-- INNER JOIN
+SELECT S.Name AS N'Tên SP', S.IDSP AS N'Mã SP', D.Name AS 'Tên DM'
+    FROM SP AS S INNER JOIN DanhMuc AS D ON D.IDDM = S.MADM
+GO  
+
+ALTER TABLE SP 
+    ADD SoLuong INT
+GO
+
+UPDATE SP SET SoLuong = 100 WHERE IDSP = 4
+UPDATE SP SET SoLuong = 80 WHERE IDSP = 5
+UPDATE SP SET SoLuong = 210 WHERE IDSP = 6
+UPDATE SP SET SoLuong = 510 WHERE IDSP = 7
+
+SELECT * FROM SP
+
+-- SELECT TOP
+SELECT TOP 3 *FROM SP
+GO
+
+-- BETWEEN và SUM
+SELECT SUM(SoLuong) FROM SP WHERE SoLuong BETWEEN 100 AND 300
+GO
+
+-- LIKE
+SELECT *FROM SP WHERE Name LIKE  '%O%'
+GO
+
+
+CREATE DATABASE DONHANG
+GO
+
+USE DONHANG
+GO
+
+CREATE TABLE KhachHang (
+    Name NVARCHAR(255),
+    ID INT IDENTITY,
+    MADH CHAR(10)
+)
+GO
+CREATE TABLE DonHang (
+    MADH CHAR(10),
+    Name NVARCHAR(255)
+)
+GO
+
+INSERT INTO DonHang
+    VALUES
+    ('DH1',N'Đơn Hàng 1'),
+    ('DH2',N'Đơn Hàng 2')
+GO
+
+INSERT INTO KhachHang
+    VALUES
+    (N'Lò Văn Hiền','DH1'),
+    (N'Nguyễn Văn Minh Cường','DH2'),
+    (N'Phùng Thị Minh Huệ','DH1'),
+    (N'Dương Đức Mạnh',NULL)
+GO
+
+-- INNER JOIN
+SELECT * FROM KhachHang AS K INNER JOIN DonHang AS D ON K.MADH = D.MADH
+GO
+-- FULL OUTER JOIN
+SELECT * FROM KhachHang AS K FULL OUTER JOIN DonHang AS D ON K.MADH = D.MADH
+GO
+-- LEFT - RIGHT JOIN
+SELECT * FROM KhachHang AS K LEFT JOIN DonHang AS D ON D.MADH = K.MADH
+GO
